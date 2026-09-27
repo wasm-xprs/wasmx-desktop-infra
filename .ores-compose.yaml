@@ -21,7 +21,7 @@ services:
       command: ["curl", "--fail", "--silent", "http://127.0.0.1:8765/healthz"]
       interval_ms: 1000
       timeout_ms: 500
-      retries: 30
+      retries: 20
 
   cloudflared:
     runtime: host
