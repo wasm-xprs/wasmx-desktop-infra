@@ -1,0 +1,31 @@
+schema_version: ores.compose.v1
+project: wasm-xprs
+allow_lazy_start: false
+
+source:
+  repository: https://github.com/wasm-xprs/wasmx-desktop-daemon.git
+  commit: 656ba67317cd2d5336fa700deb0be6f77c6a9096
+  checkout_dir: tmp/dev/wasmx-desktop-daemon
+
+services:
+  daemon:
+    runtime: host
+    working_dir: .
+    build:
+      - ["cargo", "build", "--release"]
+    command: ["target/release/wasmx-desktop-daemon"]
+    inherit_env: ["HOME", "PATH", "RUST_LOG"]
+    environment:
+      WASMX_DESKTOP_ADDR: "127.0.0.1:8765"
+    healthcheck:
+      command: ["curl", "--fail", "--silent", "http://127.0.0.1:8765/healthz"]
+      interval_ms: 1000
+      timeout_ms: 500
+      retries: 30
+
+  cloudflared:
+    runtime: host
+    working_dir: .
+    command: ["cloudflared", "tunnel", "--no-autoupdate", "run"]
+    depends_on: ["daemon"]
+    inherit_env: ["PATH", "TUNNEL_TOKEN"]
