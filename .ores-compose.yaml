@@ -4,7 +4,7 @@ allow_lazy_start: false
 
 source:
   repository: https://github.com/wasm-xprs/wasmx-desktop-daemon.git
-  commit: 656ba67317cd2d5336fa700deb0be6f77c6a9096
+  commit: f45bde1e5f537a64a48168ae8233688edcb0eb2e
   checkout_dir: tmp/dev/wasmx-desktop-daemon
 
 services:
