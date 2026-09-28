@@ -89,3 +89,10 @@ The ORES Compose manifest explicitly sets the default desktop policy:
 The daemon enforces its own absolute security ceilings as well; orchestration settings are not the only enforcement layer.
 
 The daemon also persists a host-only artifact manifest that binds each deployment ID to its module SHA-256, byte length, target and guest ABI. The orchestration healthcheck uses `/readyz`, so tunnel startup waits for the artifact store to be usable rather than merely for the process to accept TCP connections.
+
+
+## Shared desktop platform pin
+
+This repo keeps `.ores-compose.yaml` as the local process/service authority and separately pins the shared desktop platform in `.ores-common-desktop.toml` at `73ebe4b3caa7478c45f64a2eb983838a91ff9732`.
+
+The common layer owns lifecycle/routing/auth/state/packaging/conformance contracts; WasmX keeps its Wasmtime-specific runtime adapter, resource policy, and local topology. The common source repository is private, so CI must consume a promoted Zed package artifact rather than assuming a cross-organization GitHub token can clone it.
