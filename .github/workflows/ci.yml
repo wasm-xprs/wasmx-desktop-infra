@@ -21,7 +21,7 @@ jobs:
             sh -n "$script"
           done
       - name: Validate launchd plist XML
-        run: python3 -c 'import xml.etree.ElementTree as E; E.parse("services/launchd/com.wasm-xprs.daemon.plist")'
+        run: xmllint --noout services/launchd/com.wasm-xprs.daemon.plist
       - name: Validate PowerShell syntax
         shell: pwsh
         run: |
