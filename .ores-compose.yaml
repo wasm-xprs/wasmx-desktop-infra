@@ -4,7 +4,7 @@ allow_lazy_start: false
 
 source:
   repository: https://github.com/wasm-xprs/wasmx-desktop-daemon.git
-  commit: f45bde1e5f537a64a48168ae8233688edcb0eb2e
+  commit: 66aeb7e8e1e6e2a96f9316f3db3533f5461a4f0d
   checkout_dir: tmp/dev/wasmx-desktop-daemon
 
 services:
@@ -17,6 +17,11 @@ services:
     inherit_env: ["HOME", "PATH", "RUST_LOG"]
     environment:
       WASMX_DESKTOP_ADDR: "127.0.0.1:8765"
+      WASMX_MAX_MEMORY_BYTES: "134217728"
+      WASMX_MAX_PARALLEL_INVOCATIONS: "8"
+      WASMX_MAX_PARALLEL_COMPILES: "2"
+      WASMX_MAX_CACHED_MODULES: "32"
+      WASMX_DEFAULT_FUEL: "50000000"
     healthcheck:
       command: ["curl", "--fail", "--silent", "http://127.0.0.1:8765/healthz"]
       interval_ms: 1000

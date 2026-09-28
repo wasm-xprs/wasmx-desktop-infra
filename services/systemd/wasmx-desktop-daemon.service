@@ -12,10 +12,23 @@ Environment=WASMX_MAX_PARALLEL_INVOCATIONS=8
 Environment=WASMX_DEFAULT_FUEL=50000000
 Restart=on-failure
 RestartSec=2
+UMask=0077
 NoNewPrivileges=true
 PrivateTmp=true
+PrivateDevices=true
 ProtectSystem=strict
 ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6
+TasksMax=128
+LimitNOFILE=4096
 ReadWritePaths=%h/.wasm-xprs
 
 [Install]

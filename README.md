@@ -51,3 +51,37 @@ Quick tunnels are intended only for development. Production/self-hosted installs
 - TUNNEL_TOKEN is inherited from the local environment and is never committed.
 - Wasm invocations still require the daemon bearer token.
 - Cloudflare Access should protect any public hostname.
+
+
+## Install as a desktop user service
+
+First install `wasmx-desktop-daemon` at `~/.local/bin/wasmx-desktop-daemon`.
+
+macOS or Linux:
+
+    ./scripts/install-service.sh
+    ./scripts/verify-daemon.sh
+
+Remove it with:
+
+    ./scripts/uninstall-service.sh
+
+Windows uses Task Scheduler so the ordinary console daemon can start at logon without requiring a Windows-service wrapper:
+
+    powershell -File services/windows/install-task.ps1
+
+Remove it with:
+
+    powershell -File services/windows/uninstall-task.ps1
+
+## Local resource policy
+
+The ORES Compose manifest explicitly sets the default desktop policy:
+
+- 128 MiB Wasm linear memory per invocation
+- 8 concurrent invocations
+- 2 concurrent Wasm compilations
+- 32 compiled modules cached in memory
+- 50,000,000 fuel units by default
+
+The daemon enforces its own absolute security ceilings as well; orchestration settings are not the only enforcement layer.
