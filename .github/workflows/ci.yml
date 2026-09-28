@@ -30,7 +30,7 @@ jobs:
           grep -q 'commit: 66aeb7e8e1e6e2a96f9316f3db3533f5461a4f0d' .ores-compose.yaml
           grep -q 'cloudflared' .ores-compose.yaml
           grep -q 'TUNNEL_TOKEN' .ores-compose.yaml
-          ! grep -q '0.0.0.0' .ores-compose.yaml
+          ! grep -Fq '0.0.0.0' .ores-compose.yaml
       - name: Check systemd hardening invariants
         run: |
           grep -q '^NoNewPrivileges=true$' services/systemd/wasmx-desktop-daemon.service
