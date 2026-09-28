@@ -82,6 +82,13 @@ The ORES Compose manifest explicitly sets the default desktop policy:
 - 8 concurrent invocations
 - 2 concurrent Wasm compilations
 - 32 compiled modules cached in memory
+- 64 persisted deployments per tenant
+- 512 MiB persisted Wasm bytes per tenant
 - 50,000,000 fuel units by default
 
 The daemon enforces its own absolute security ceilings as well; orchestration settings are not the only enforcement layer.
+
+
+## Readiness and authenticated verification
+
+The orchestration healthcheck uses `/readyz`, which verifies that the daemon's artifact root is available rather than merely proving that the HTTP process is alive. `scripts/verify-daemon.sh` separately performs an authenticated status request and refuses plaintext remote URLs or permissive Unix token files.
