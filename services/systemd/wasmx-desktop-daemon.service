@@ -1,0 +1,22 @@
+[Unit]
+Description=wasm-xprs desktop Wasmtime daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/wasmx-desktop-daemon
+Environment=WASMX_DESKTOP_ADDR=127.0.0.1:8765
+Environment=WASMX_MAX_MEMORY_BYTES=134217728
+Environment=WASMX_MAX_PARALLEL_INVOCATIONS=8
+Environment=WASMX_DEFAULT_FUEL=50000000
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.wasm-xprs
+
+[Install]
+WantedBy=default.target

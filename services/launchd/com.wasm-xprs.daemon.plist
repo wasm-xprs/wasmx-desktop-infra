@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.wasm-xprs.daemon</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__HOME__/.local/bin/wasmx-desktop-daemon</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>WASMX_DESKTOP_ADDR</key>
+    <string>127.0.0.1:8765</string>
+    <key>WASMX_MAX_MEMORY_BYTES</key>
+    <string>134217728</string>
+    <key>WASMX_MAX_PARALLEL_INVOCATIONS</key>
+    <string>8</string>
+    <key>WASMX_DEFAULT_FUEL</key>
+    <string>50000000</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>__HOME__/.wasm-xprs/daemon/stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>__HOME__/.wasm-xprs/daemon/stderr.log</string>
+</dict>
+</plist>

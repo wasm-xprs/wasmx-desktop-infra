@@ -1,0 +1,21 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate shell scripts
+        run: |
+          for script in scripts/*.sh; do
+            sh -n "$script"
+          done
+      - name: Check required manifest invariants
+        run: |
+          grep -q 'WASMX_DESKTOP_ADDR: "127.0.0.1:8765"' .ores-compose.yaml
+          grep -q 'cloudflared' .ores-compose.yaml
+          grep -q 'TUNNEL_TOKEN' .ores-compose.yaml
