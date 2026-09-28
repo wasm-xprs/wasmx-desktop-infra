@@ -53,7 +53,7 @@ jobs:
           grep -q 'WASMX_MAX_TENANT_DEPLOYMENTS: "64"' .ores-compose.yaml
           grep -q 'WASMX_MAX_TENANT_STORAGE_BYTES: "536870912"' .ores-compose.yaml
           grep -q '/readyz' .ores-compose.yaml
-          grep -q 'commit: 97c0a0c02baab936ebc1c4b64f2fcc13bf6ffa95' .ores-compose.yaml
+          grep -q 'commit: 7e72eac4aeaf1f149ca50b14fee060b8e354288f' .ores-compose.yaml
           grep -q 'cloudflared' .ores-compose.yaml
           grep -q 'TUNNEL_TOKEN' .ores-compose.yaml
           ! grep -Fq '0.0.0.0' .ores-compose.yaml
@@ -72,3 +72,9 @@ jobs:
           grep -q '<string>64</string>' services/launchd/com.wasm-xprs.daemon.plist
           grep -q '<key>WASMX_MAX_TENANT_STORAGE_BYTES</key>' services/launchd/com.wasm-xprs.daemon.plist
           grep -q '<string>536870912</string>' services/launchd/com.wasm-xprs.daemon.plist
+
+      - name: Check verification-script security invariants
+        run: |
+          grep -q 'refusing insecure or unsupported daemon URL' scripts/verify-daemon.sh
+          grep -q 'daemon token must be a regular non-symlink file' scripts/verify-daemon.sh
+          grep -q -- "--proto '=http,https'" scripts/verify-daemon.sh
