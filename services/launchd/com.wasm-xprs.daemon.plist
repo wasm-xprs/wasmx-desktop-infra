@@ -16,6 +16,14 @@
     <string>134217728</string>
     <key>WASMX_MAX_PARALLEL_INVOCATIONS</key>
     <string>8</string>
+    <key>WASMX_MAX_PARALLEL_COMPILES</key>
+    <string>2</string>
+    <key>WASMX_MAX_CACHED_MODULES</key>
+    <string>32</string>
+    <key>WASMX_MAX_TENANT_DEPLOYMENTS</key>
+    <string>64</string>
+    <key>WASMX_MAX_TENANT_STORAGE_BYTES</key>
+    <string>536870912</string>
     <key>WASMX_DEFAULT_FUEL</key>
     <string>50000000</string>
   </dict>

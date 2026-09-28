@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - name: Validate shell scripts
@@ -22,12 +22,38 @@ jobs:
           done
       - name: Validate launchd plist XML
         run: python3 -c 'import xml.etree.ElementTree as E; E.parse("services/launchd/com.wasm-xprs.daemon.plist")'
+      - name: Validate PowerShell syntax
+        shell: pwsh
+        run: |
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            "services/windows/install-task.ps1",
+            [ref]$null,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | ForEach-Object { Write-Error $_ }
+            exit 1
+          }
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            "services/windows/uninstall-task.ps1",
+            [ref]$null,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | ForEach-Object { Write-Error $_ }
+            exit 1
+          }
       - name: Check required manifest invariants
         run: |
           grep -q 'WASMX_DESKTOP_ADDR: "127.0.0.1:8765"' .ores-compose.yaml
           grep -q 'WASMX_MAX_PARALLEL_COMPILES: "2"' .ores-compose.yaml
           grep -q 'WASMX_MAX_CACHED_MODULES: "32"' .ores-compose.yaml
-          grep -q 'commit: 66aeb7e8e1e6e2a96f9316f3db3533f5461a4f0d' .ores-compose.yaml
+          grep -q 'WASMX_MAX_TENANT_DEPLOYMENTS: "64"' .ores-compose.yaml
+          grep -q 'WASMX_MAX_TENANT_STORAGE_BYTES: "536870912"' .ores-compose.yaml
+          grep -q '/readyz' .ores-compose.yaml
+          grep -q 'commit: 97c0a0c02baab936ebc1c4b64f2fcc13bf6ffa95' .ores-compose.yaml
           grep -q 'cloudflared' .ores-compose.yaml
           grep -q 'TUNNEL_TOKEN' .ores-compose.yaml
           ! grep -Fq '0.0.0.0' .ores-compose.yaml
@@ -37,3 +63,12 @@ jobs:
           grep -q '^PrivateDevices=true$' services/systemd/wasmx-desktop-daemon.service
           grep -q '^CapabilityBoundingSet=$' services/systemd/wasmx-desktop-daemon.service
           grep -q '^RestrictAddressFamilies=AF_INET AF_INET6$' services/systemd/wasmx-desktop-daemon.service
+          grep -q '^Environment=WASMX_MAX_TENANT_DEPLOYMENTS=64$' services/systemd/wasmx-desktop-daemon.service
+          grep -q '^Environment=WASMX_MAX_TENANT_STORAGE_BYTES=536870912$' services/systemd/wasmx-desktop-daemon.service
+
+      - name: Check launchd resource invariants
+        run: |
+          grep -q '<key>WASMX_MAX_TENANT_DEPLOYMENTS</key>' services/launchd/com.wasm-xprs.daemon.plist
+          grep -q '<string>64</string>' services/launchd/com.wasm-xprs.daemon.plist
+          grep -q '<key>WASMX_MAX_TENANT_STORAGE_BYTES</key>' services/launchd/com.wasm-xprs.daemon.plist
+          grep -q '<string>536870912</string>' services/launchd/com.wasm-xprs.daemon.plist

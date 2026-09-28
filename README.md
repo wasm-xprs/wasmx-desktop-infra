@@ -82,6 +82,10 @@ The ORES Compose manifest explicitly sets the default desktop policy:
 - 8 concurrent invocations
 - 2 concurrent Wasm compilations
 - 32 compiled modules cached in memory
+- 64 persisted deployments per tenant
+- 512 MiB persisted Wasm bytes per tenant
 - 50,000,000 fuel units by default
 
 The daemon enforces its own absolute security ceilings as well; orchestration settings are not the only enforcement layer.
+
+The daemon also persists a host-only artifact manifest that binds each deployment ID to its module SHA-256, byte length, target and guest ABI. The orchestration healthcheck uses `/readyz`, so tunnel startup waits for the artifact store to be usable rather than merely for the process to accept TCP connections.
