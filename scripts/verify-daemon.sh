@@ -49,5 +49,49 @@ if [ "${#token}" -lt 32 ]; then
   exit 1
 fi
 
-curl --proto '=http,https' --fail --silent --show-error   -H "Authorization: Bearer $token"   "$url/v1/status"
-echo
+status_file="$(mktemp)"
+trap 'rm -f "$status_file"' EXIT HUP INT TERM
+
+curl --proto '=http,https' --fail --silent --show-error \
+  -H "Authorization: Bearer $token" \
+  "$url/v1/status" >"$status_file"
+
+python3 - "$status_file" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as handle:
+    status = json.load(handle)
+
+expected = {
+    "runtime": "wasmtime",
+    "isolation": "fresh_store_per_invocation",
+    "guest_abi": "wasmx-v1",
+    "target_triple": "wasm32-unknown-unknown",
+    "wasi_enabled": False,
+    "store_per_invocation": True,
+}
+for key, expected_value in expected.items():
+    if status.get(key) != expected_value:
+        raise SystemExit(
+            f"daemon runtime contract mismatch for {key}: "
+            f"expected {expected_value!r}, got {status.get(key)!r}"
+        )
+
+for key in (
+    "max_memory_bytes",
+    "max_cached_modules",
+    "max_tenant_deployments",
+    "max_tenant_storage_bytes",
+):
+    value = status.get(key)
+    if not isinstance(value, int) or value <= 0:
+        raise SystemExit(f"daemon status has invalid {key}: {value!r}")
+
+print(json.dumps({
+    "ready": True,
+    "authenticated": True,
+    "runtime_contract_verified": True,
+    "status": status,
+}, indent=2, sort_keys=True))
+PY
