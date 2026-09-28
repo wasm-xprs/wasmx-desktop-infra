@@ -22,6 +22,29 @@ jobs:
           done
       - name: Validate launchd plist XML
         run: python3 -c 'import xml.etree.ElementTree as E; E.parse("services/launchd/com.wasm-xprs.daemon.plist")'
+      - name: Validate PowerShell syntax
+        shell: pwsh
+        run: |
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            "services/windows/install-task.ps1",
+            [ref]$null,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | ForEach-Object { Write-Error $_ }
+            exit 1
+          }
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            "services/windows/uninstall-task.ps1",
+            [ref]$null,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | ForEach-Object { Write-Error $_ }
+            exit 1
+          }
       - name: Check required manifest invariants
         run: |
           grep -q 'WASMX_DESKTOP_ADDR: "127.0.0.1:8765"' .ores-compose.yaml
@@ -45,3 +68,10 @@ jobs:
  services/systemd/wasmx-desktop-daemon.service
           grep -q '^Environment=WASMX_MAX_TENANT_STORAGE_BYTES=536870912
  services/systemd/wasmx-desktop-daemon.service
+
+      - name: Check launchd resource invariants
+        run: |
+          grep -q '<key>WASMX_MAX_TENANT_DEPLOYMENTS</key>' services/launchd/com.wasm-xprs.daemon.plist
+          grep -q '<string>64</string>' services/launchd/com.wasm-xprs.daemon.plist
+          grep -q '<key>WASMX_MAX_TENANT_STORAGE_BYTES</key>' services/launchd/com.wasm-xprs.daemon.plist
+          grep -q '<string>536870912</string>' services/launchd/com.wasm-xprs.daemon.plist
