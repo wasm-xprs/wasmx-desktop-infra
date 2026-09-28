@@ -27,6 +27,9 @@ jobs:
           grep -q 'WASMX_DESKTOP_ADDR: "127.0.0.1:8765"' .ores-compose.yaml
           grep -q 'WASMX_MAX_PARALLEL_COMPILES: "2"' .ores-compose.yaml
           grep -q 'WASMX_MAX_CACHED_MODULES: "32"' .ores-compose.yaml
+          grep -q 'WASMX_MAX_TENANT_DEPLOYMENTS: "64"' .ores-compose.yaml
+          grep -q 'WASMX_MAX_TENANT_STORAGE_BYTES: "536870912"' .ores-compose.yaml
+          grep -q '/readyz' .ores-compose.yaml
           grep -q 'commit: 66aeb7e8e1e6e2a96f9316f3db3533f5461a4f0d' .ores-compose.yaml
           grep -q 'cloudflared' .ores-compose.yaml
           grep -q 'TUNNEL_TOKEN' .ores-compose.yaml
@@ -36,4 +39,9 @@ jobs:
           grep -q '^NoNewPrivileges=true$' services/systemd/wasmx-desktop-daemon.service
           grep -q '^PrivateDevices=true$' services/systemd/wasmx-desktop-daemon.service
           grep -q '^CapabilityBoundingSet=$' services/systemd/wasmx-desktop-daemon.service
-          grep -q '^RestrictAddressFamilies=AF_INET AF_INET6$' services/systemd/wasmx-desktop-daemon.service
+          grep -q '^RestrictAddressFamilies=AF_INET AF_INET6
+ services/systemd/wasmx-desktop-daemon.service
+          grep -q '^Environment=WASMX_MAX_TENANT_DEPLOYMENTS=64
+ services/systemd/wasmx-desktop-daemon.service
+          grep -q '^Environment=WASMX_MAX_TENANT_STORAGE_BYTES=536870912
+ services/systemd/wasmx-desktop-daemon.service
