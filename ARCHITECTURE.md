@@ -46,3 +46,7 @@ The Linux unit applies OS-level restrictions that are compatible with a JIT runt
 - Windows: per-user Scheduled Task at logon.
 
 All three keep the daemon bound to loopback. Cloudflare Tunnel is the only intended public ingress path.
+
+## Persistent artifact boundary
+
+Each deployment directory contains the immutable Wasm module plus a host-only integrity manifest. Runtime cold loads verify that manifest before caching/instantiating the module. Tenant deployment-count and byte quotas bound local persistent growth independently of invocation memory/fuel limits.
