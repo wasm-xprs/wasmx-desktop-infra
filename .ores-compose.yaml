@@ -21,9 +21,11 @@ services:
       WASMX_MAX_PARALLEL_INVOCATIONS: "8"
       WASMX_MAX_PARALLEL_COMPILES: "2"
       WASMX_MAX_CACHED_MODULES: "32"
+      WASMX_MAX_TENANT_DEPLOYMENTS: "64"
+      WASMX_MAX_TENANT_STORAGE_BYTES: "536870912"
       WASMX_DEFAULT_FUEL: "50000000"
     healthcheck:
-      command: ["curl", "--fail", "--silent", "http://127.0.0.1:8765/healthz"]
+      command: ["curl", "--fail", "--silent", "http://127.0.0.1:8765/readyz"]
       interval_ms: 1000
       timeout_ms: 500
       retries: 20
