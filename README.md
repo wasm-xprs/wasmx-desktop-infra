@@ -101,3 +101,8 @@ This product consumes the shared ORES generation model with **native atomic rout
 `hot-reload-policy.json` declares the product policy. The edge may optionally use nginx, HAProxy, or Caddy. nginx uses validated worker-generation reloads; HAProxy prefers Runtime API changes and falls back to master-worker reload for structural changes; Caddy uses its transactional Admin API. Proxy-managed application routes are opt-in and limited to declarative routing/middleware. Arbitrary middleware code stays in BEAM, Wasm, or a separately supervised process generation.
 
 Long-lived WebSockets/streams are bounded by a hard generation drain timeout so repeated reloads cannot accumulate old generations indefinitely.
+
+
+## Common desktop platform pin
+
+This repository consumes `ORESoftware/ores-common-desktop-infra` at exact revision `1de34a491673cff2ff7fedb6ba36f8b6a10ae5a1`. Shared lifecycle, routing, auth, recovery, and conformance policy remain upstream; this repository owns only product topology and runtime-specific defaults.
