@@ -89,3 +89,7 @@ The ORES Compose manifest explicitly sets the default desktop policy:
 The daemon enforces its own absolute security ceilings as well; orchestration settings are not the only enforcement layer.
 
 The daemon also persists a host-only artifact manifest that binds each deployment ID to its module SHA-256, byte length, target and guest ABI. The orchestration healthcheck uses `/readyz`, so tunnel startup waits for the artifact store to be usable rather than merely for the process to accept TCP connections.
+
+## Runtime verification
+
+`scripts/verify-daemon.sh` verifies process readiness, token-file safety, authenticated status, and the live execution contract. It fails if the daemon drifts away from direct Wasmtime, `wasmx-v1`, `wasm32-unknown-unknown`, fresh Store-per-invocation isolation, or the no-WASI policy.
