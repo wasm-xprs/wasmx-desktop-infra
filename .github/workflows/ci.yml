@@ -51,7 +51,7 @@ jobs:
           }
       - name: Check required manifest invariants
         run: |
-          grep -q 'WASMX_DESKTOP_ADDR: "127.0.0.1:8765"' .ores-compose.yaml
+          grep -q 'WASMX_DESKTOP_ADDR: "127.0.0.1:8766"' .ores-compose.yaml
           grep -q 'WASMX_MAX_PARALLEL_COMPILES: "2"' .ores-compose.yaml
           grep -q 'WASMX_MAX_CACHED_MODULES: "32"' .ores-compose.yaml
           grep -q 'WASMX_MAX_TENANT_DEPLOYMENTS: "64"' .ores-compose.yaml
