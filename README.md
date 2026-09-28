@@ -34,7 +34,10 @@ Then run:
     ores-compose plan .ores-compose.yaml
     ores-compose up .ores-compose.yaml
 
-The manifest pins the exact wasmx-desktop-daemon Git revision so local startup is reproducible.
+The local compose graph starts only the loopback daemon. It deliberately does not
+start `cloudflared`; public ingress is a separately gated lifecycle with a
+distinct remote-auth boundary. The manifest pins the exact
+`wasmx-desktop-daemon` Git revision so local startup is reproducible.
 
 ## Development quick tunnel
 
@@ -101,3 +104,11 @@ This product consumes the shared ORES generation model with **native atomic rout
 `hot-reload-policy.json` declares the product policy. The edge may optionally use nginx, HAProxy, or Caddy. nginx uses validated worker-generation reloads; HAProxy prefers Runtime API changes and falls back to master-worker reload for structural changes; Caddy uses its transactional Admin API. Proxy-managed application routes are opt-in and limited to declarative routing/middleware. Arbitrary middleware code stays in BEAM, Wasm, or a separately supervised process generation.
 
 Long-lived WebSockets/streams are bounded by a hard generation drain timeout so repeated reloads cannot accumulate old generations indefinitely.
+
+
+## Shared desktop infra dependency
+
+`appliance.json` pins the exact reviewed `ORESoftware/ores-common-desktop-infra`
+revision and declares the shared runtime/isolation/hot-reload capabilities used
+by this product. `desktop-contract` CI validates that appliance, local compose,
+and `hot-reload-policy.json` remain consistent.
