@@ -1,0 +1,62 @@
+{
+  "schema": "ores.desktop-appliance/v1",
+  "product": "wasm-xprs",
+  "channel": "candidate",
+  "orchestrator": {
+    "engine": "ores-compose",
+    "config": ".ores-compose.yaml",
+    "public_config": null,
+    "source_role": "desktop-daemon",
+    "shutdown_timeout_ms": 5000
+  },
+  "host": {
+    "trust_model": "developer-owned-trusted-host",
+    "daemon_listen": "127.0.0.1:8765",
+    "public_origin": "http://127.0.0.1:8765",
+    "requires_public_ip": false
+  },
+  "cloudflare": {
+    "mode": "gated",
+    "credentials_in_repo": false,
+    "token_source": "file",
+    "token_file_env": "WASMX_CF_TUNNEL_TOKEN_FILE",
+    "hostname_env": "WASMX_CF_TUNNEL_HOSTNAME",
+    "origin": "http://127.0.0.1:8765",
+    "hostname_template": "<installation-id>.<configured-zone>",
+    "ingress_paths": [
+      "/v1/invoke"
+    ],
+    "public_ingress_ready": false,
+    "origin_auth": "dedicated-remote-auth-required",
+    "promotion_reason": "Public tunnel lifecycle is intentionally separate from local compose; dedicated remote authentication is required before promotion."
+  },
+  "update": {
+    "mode": "exact-revision",
+    "allow_mutable_latest": false
+  },
+  "promotion_gates": {
+    "public_ingress_ready": false,
+    "common_layer_pinned": true,
+    "common_layer_ci_verified": false
+  },
+  "common_layer": {
+    "repository": "ORESoftware/ores-common-desktop-infra",
+    "checkout_dir": "tmp/dev/ores-common-desktop-infra",
+    "status": "pinned",
+    "revision": "1de34a491673cff2ff7fedb6ba36f8b6a10ae5a1",
+    "capabilities": [
+      "consumer-validation",
+      "loopback-policy",
+      "secret-file-policy",
+      "cloudflare-policy",
+      "update-policy",
+      "process-lifecycle",
+      "health-readiness",
+      "structured-logging",
+      "runtime-isolation",
+      "stable-ingress",
+      "hot-reload-backends"
+    ]
+  },
+  "hot_reload_policy": "hot-reload-policy.json"
+}
