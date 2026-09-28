@@ -13,7 +13,7 @@ services:
     working_dir: .
     build:
       - ["cargo", "build", "--release"]
-    command: ["target/release/wasmx-desktop-daemon"]
+    command: ["./target/release/wasmx-desktop-daemon"]
     inherit_env: ["HOME", "PATH", "RUST_LOG"]
     environment:
       WASMX_DESKTOP_ADDR: "127.0.0.1:8765"
@@ -30,9 +30,3 @@ services:
       timeout_ms: 500
       retries: 20
 
-  cloudflared:
-    runtime: host
-    working_dir: .
-    command: ["cloudflared", "tunnel", "--no-autoupdate", "run"]
-    depends_on: ["daemon"]
-    inherit_env: ["PATH", "TUNNEL_TOKEN"]
