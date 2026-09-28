@@ -11,8 +11,8 @@
   },
   "host": {
     "trust_model": "developer-owned-trusted-host",
-    "daemon_listen": "127.0.0.1:8765",
-    "public_origin": "http://127.0.0.1:8765",
+    "daemon_listen": "127.0.0.1:8766",
+    "public_origin": "http://127.0.0.1:8766",
     "requires_public_ip": false
   },
   "components": [
@@ -27,7 +27,7 @@
   "cloudflare": {
     "mode": "gated",
     "credentials_in_repo": false,
-    "origin": "http://127.0.0.1:8765",
+    "origin": "http://127.0.0.1:8766",
     "hostname_template": "<installation-id>.<configured-zone>",
     "ingress_paths": [
       "/v1/invoke"

@@ -16,7 +16,7 @@ services:
     command: ["./target/release/wasmx-desktop-daemon"]
     inherit_env: ["HOME", "PATH", "RUST_LOG"]
     environment:
-      WASMX_DESKTOP_ADDR: "127.0.0.1:8765"
+      WASMX_DESKTOP_ADDR: "127.0.0.1:8766"
       WASMX_MAX_MEMORY_BYTES: "134217728"
       WASMX_MAX_PARALLEL_INVOCATIONS: "8"
       WASMX_MAX_PARALLEL_COMPILES: "2"
@@ -25,7 +25,7 @@ services:
       WASMX_MAX_TENANT_STORAGE_BYTES: "536870912"
       WASMX_DEFAULT_FUEL: "50000000"
     healthcheck:
-      command: ["curl", "--fail", "--silent", "http://127.0.0.1:8765/readyz"]
+      command: ["curl", "--fail", "--silent", "http://127.0.0.1:8766/readyz"]
       interval_ms: 1000
       timeout_ms: 500
       retries: 20
