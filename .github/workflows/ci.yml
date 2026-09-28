@@ -20,6 +20,10 @@ jobs:
           for script in scripts/*.sh; do
             sh -n "$script"
           done
+      - name: Install XML validator
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes libxml2-utils
       - name: Validate launchd plist XML
         run: xmllint --noout services/launchd/com.wasm-xprs.daemon.plist
       - name: Validate PowerShell syntax
