@@ -4,8 +4,12 @@ set -eu
 url="${WASMX_DESKTOP_DAEMON_URL:-http://127.0.0.1:8765}"
 token_file="${WASMX_DESKTOP_TOKEN_FILE:-$HOME/.wasm-xprs/daemon/token}"
 
-curl --fail --silent --show-error "$url/healthz" >/dev/null
+curl --fail --silent --show-error "$url/readyz" >/dev/null
 
+if [ -L "$token_file" ]; then
+  echo "daemon token must not be a symlink: $token_file" >&2
+  exit 1
+fi
 if [ ! -f "$token_file" ]; then
   echo "missing daemon token: $token_file" >&2
   exit 1
