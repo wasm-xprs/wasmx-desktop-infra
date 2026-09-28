@@ -102,8 +102,9 @@ jobs:
           grep -q 'WASMX_MAX_TENANT_STORAGE_BYTES: "536870912"' .ores-compose.yaml
           grep -q '/readyz' .ores-compose.yaml
           grep -q 'commit: 809ac1a88b9167e560bf5f7779cfdb79f44068fa' .ores-compose.yaml
-          grep -q 'cloudflared' .ores-compose.yaml
-          grep -q 'TUNNEL_TOKEN' .ores-compose.yaml
+          ! grep -q 'cloudflared' .ores-compose.yaml
+          ! grep -q 'TUNNEL_TOKEN' .ores-compose.yaml
+          ruby -rjson -e 'a=JSON.parse(File.read("appliance.json")); abort unless a.dig("cloudflare","mode") == "gated" && a.dig("cloudflare","public_ingress_ready") == false'
           ! grep -Fq '0.0.0.0' .ores-compose.yaml
       - name: Check systemd hardening invariants
         run: |
