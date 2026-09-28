@@ -19,6 +19,12 @@
     <key>WASMX_DEFAULT_FUEL</key>
     <string>50000000</string>
   </dict>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>ThrottleInterval</key>
+  <integer>2</integer>
+  <key>WorkingDirectory</key>
+  <string>__HOME__/.wasm-xprs</string>
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>
