@@ -28,13 +28,13 @@ Configure the tunnel's public hostname in Cloudflare to use the HTTP origin:
 
     http://127.0.0.1:8765
 
-Then run:
+Run the local appliance independently of public ingress:
 
     ores-compose check .ores-compose.yaml
     ores-compose plan .ores-compose.yaml
     ores-compose up .ores-compose.yaml
 
-The manifest pins the exact wasmx-desktop-daemon Git revision so local startup is reproducible.
+The local compose manifest intentionally does not start `cloudflared`. Public tunnel lifecycle is managed separately so tunnel/auth changes cannot restart the local execution plane. The manifest pins the exact wasmx-desktop-daemon Git revision so local startup is reproducible.
 
 ## Development quick tunnel
 
