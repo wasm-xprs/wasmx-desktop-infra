@@ -1,0 +1,84 @@
+{
+  "schema": "ores.desktop-appliance/v1",
+  "product": "wasm-xprs",
+  "channel": "candidate",
+  "host": {
+    "trust_model": "developer-owned-trusted-host",
+    "daemon_listen": "127.0.0.1:8765",
+    "public_origin": "http://127.0.0.1:8765",
+    "default_reverse_proxy": "none",
+    "requires_public_ip": false
+  },
+  "components": [
+    {
+      "name": "desktop-daemon",
+      "repo": "wasm-xprs/wasmx-desktop-daemon",
+      "rev": "809ac1a88b9167e560bf5f7779cfdb79f44068fa",
+      "kind": "rust",
+      "promoted": false
+    }
+  ],
+  "cloudflare": {
+    "origin": "http://127.0.0.1:8765",
+    "credentials_in_repo": false,
+    "mode": "gated",
+    "token_source": "file",
+    "token_file_env": "WASMX_CF_TUNNEL_TOKEN_FILE",
+    "hostname_env": "WASMX_CF_TUNNEL_HOSTNAME",
+    "hostname_template": "<installation-id>.<configured-zone>",
+    "ingress_paths": [
+      "/v1/invoke"
+    ],
+    "public_ingress_ready": false,
+    "origin_auth": "dedicated-remote-auth-required",
+    "promotion_reason": "The daemon currently uses one local desktop-control bearer for deploy/invoke/control APIs; public ingress remains gated until a distinct remote-auth boundary is implemented."
+  },
+  "update": {
+    "mode": "exact-revision",
+    "allow_mutable_latest": false,
+    "rollback": "previous-manifest"
+  },
+  "promotion_gates": {
+    "public_ingress_ready": false,
+    "daemon_lockfile_committed": false,
+    "common_layer_pinned": false,
+    "common_layer_ci_verified": false
+  },
+  "orchestrator": {
+    "engine": "ores-compose",
+    "config": ".ores-compose.yaml",
+    "public_config": null,
+    "source_role": "desktop-daemon",
+    "shutdown_timeout_ms": 5000
+  },
+  "common_layer": {
+    "repository": "ORESoftware/ores-common-desktop-infra",
+    "checkout_dir": "tmp/dev/ores-common-desktop-infra",
+    "status": "awaiting-repository",
+    "revision": null,
+    "capabilities": [
+      "consumer-validation",
+      "loopback-policy",
+      "secret-file-policy",
+      "cloudflare-policy",
+      "update-policy",
+      "process-lifecycle",
+      "health-readiness",
+      "structured-logging",
+      "desktop-auth-shell",
+      "mixed-compute-plane",
+      "runtime-isolation",
+      "stable-ingress",
+      "cross-platform-packaging",
+      "typed-mutation-auth",
+      "middleware-executor-isolation",
+      "runtime-adapter-abi",
+      "immutable-deployment-bundle",
+      "durable-generation-state",
+      "desktop-event-stream",
+      "conformance-suite",
+      "hot-reload-backends"
+    ]
+  },
+  "hot_reload_policy": "hot-reload-policy.json"
+}
