@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - name: Validate shell scripts
@@ -62,12 +62,9 @@ jobs:
           grep -q '^NoNewPrivileges=true$' services/systemd/wasmx-desktop-daemon.service
           grep -q '^PrivateDevices=true$' services/systemd/wasmx-desktop-daemon.service
           grep -q '^CapabilityBoundingSet=$' services/systemd/wasmx-desktop-daemon.service
-          grep -q '^RestrictAddressFamilies=AF_INET AF_INET6
- services/systemd/wasmx-desktop-daemon.service
-          grep -q '^Environment=WASMX_MAX_TENANT_DEPLOYMENTS=64
- services/systemd/wasmx-desktop-daemon.service
-          grep -q '^Environment=WASMX_MAX_TENANT_STORAGE_BYTES=536870912
- services/systemd/wasmx-desktop-daemon.service
+          grep -q '^RestrictAddressFamilies=AF_INET AF_INET6$' services/systemd/wasmx-desktop-daemon.service
+          grep -q '^Environment=WASMX_MAX_TENANT_DEPLOYMENTS=64$' services/systemd/wasmx-desktop-daemon.service
+          grep -q '^Environment=WASMX_MAX_TENANT_STORAGE_BYTES=536870912$' services/systemd/wasmx-desktop-daemon.service
 
       - name: Check launchd resource invariants
         run: |
