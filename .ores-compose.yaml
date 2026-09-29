@@ -12,7 +12,7 @@ services:
     runtime: host
     working_dir: .
     build:
-      - ["cargo", "build", "--release", "--locked"]
+      - ["cargo", "build", "--release"]
     command: ["./target/release/wasmx-desktop-daemon"]
     inherit_env: ["HOME", "PATH", "RUST_LOG"]
     environment:
