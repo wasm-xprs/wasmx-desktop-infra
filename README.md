@@ -10,7 +10,7 @@ This repository owns the local topology. The actual FaaS executor lives in wasmx
         |
     cloudflared
         |
-    127.0.0.1:8765
+    127.0.0.1:8766
         |
     wasmx-desktop-daemon
         |
@@ -20,24 +20,21 @@ The daemon is intentionally loopback-only. cloudflared creates the outbound conn
 
 ## Start locally
 
-Install Rust, curl, cloudflared and ORESoftware/ores-compose. Then set a remotely-managed Cloudflare Tunnel token:
-
-    export TUNNEL_TOKEN=...
-
-Configure the tunnel's public hostname in Cloudflare to use the HTTP origin:
-
-    http://127.0.0.1:8765
-
-Then run:
+Install Rust, curl and ORESoftware/ores-compose, then run:
 
     ores-compose check .ores-compose.yaml
     ores-compose plan .ores-compose.yaml
     ores-compose up .ores-compose.yaml
 
-The local compose graph starts only the loopback daemon. It deliberately does not
-start `cloudflared`; public ingress is a separately gated lifecycle with a
-distinct remote-auth boundary. The manifest pins the exact
-`wasmx-desktop-daemon` Git revision so local startup is reproducible.
+The local compose graph starts only the loopback daemon at `127.0.0.1:8766`. It
+deliberately does not start `cloudflared` or inherit tunnel credentials; public
+ingress is a separately gated lifecycle with a distinct remote-auth boundary.
+The manifest pins the exact `wasmx-desktop-daemon` Git revision so local startup
+is reproducible.
+
+If public ingress is later promoted, configure the tunnel separately against
+`http://127.0.0.1:8766` and keep its credential out of the local compose
+environment.
 
 ## Development quick tunnel
 
@@ -45,13 +42,13 @@ For a temporary development URL without a named tunnel:
 
     ./scripts/quick-tunnel.sh
 
-Quick tunnels are intended only for development. Production/self-hosted installs should use a named remotely-managed tunnel and Cloudflare Access or equivalent edge authentication in addition to the daemon bearer token.
+Quick tunnels are intended only for explicit development testing. They are not part of the normal local compose lifecycle and are not a production authorization boundary.
 
 ## Security notes
 
 - The daemon never binds to a LAN/public address.
 - The Cloudflare tunnel is outbound-only.
-- TUNNEL_TOKEN is inherited from the local environment and is never committed.
+- The local compose graph does not inherit Cloudflare tunnel credentials.
 - Wasm invocations still require the daemon bearer token.
 - Cloudflare Access should protect any public hostname.
 
